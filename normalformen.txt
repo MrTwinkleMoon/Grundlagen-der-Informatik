@@ -1,0 +1,179 @@
+package test2;
+import java.lang.Math;
+
+public class normalformen {
+	private static int n = 3;
+	
+	static int[][] wahr = {
+			{0,0,0,0},
+			{0,0,1,1},
+			{0,1,0,0},
+			{0,1,1,1},
+			{1,0,0,1},
+			{1,0,1,1},
+			{1,1,0,0},
+			{1,1,1,1}};	
+	
+	private static int zaehleneinsmenge(){
+		int k = 0;
+		for(int i=0; i<(int)Math.pow(2, n);i++) {
+			int j = wahr[i][n];
+			if(j==1) {
+				k++;
+			}
+		}
+		return k;
+	}
+	
+	private static int[][] aufstelleneinsmenge(){
+		int k = zaehleneinsmenge();
+		int[][] arr1 = new int[k][n];	//Einsmenge mit Mintermen
+		int j = 0;
+		for(int i=0; i<(int)Math.pow(2, n);i++) {
+			int m = wahr[i][n];
+				if (m == 1) {
+					arr1[j][0] = wahr[i][2];	//Speichern von x1 für die jeweilige Einsmenge
+					arr1[j][1] = wahr[i][1];	//Speichern von x2 für die jeweilige Einsmenge
+					arr1[j][2] = wahr[i][0];	//Speichern von x3 für die jeweilige Einsmenge
+				j++;
+				}			
+		}
+		return arr1;
+	}
+
+	private static int[][] aufstellennullmenge(){
+		int e = zaehleneinsmenge();
+		int k = (int)Math.pow(2, n)-e;
+		int[][] arr2 = new int[k][n];	//Nullmenge mit Maxtermen
+		int j = 0;
+		for(int i=0; i<(int)Math.pow(2, n);i++) {		
+			int m = wahr[i][n];
+				if (m == 0) {
+					arr2[j][0] = wahr[i][2];	//Speichern von x1 für die jeweilige Nullmenge
+					arr2[j][1] = wahr[i][1];	//Speichern von x2 für die jeweilige Nullmenge
+					arr2[j][2] = wahr[i][0];	//Speichern von x3 für die jeweilige Nullmenge
+				j++;
+				}		
+		}
+		return arr2;
+	}
+	
+	private static String[][] dnfaufstellen(){
+		int k = zaehleneinsmenge();
+		int[][] arr1 = aufstelleneinsmenge();
+		String [][] dnf = new String[k][n];
+		String [][] dnf2 = new String[k][2*n+2];
+		
+		for(int i=0; i<k; i++) {
+			for(int j=0; j<n; j++) {
+				if(arr1[i][j] == 1) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("X");
+					sb.append(j+1);
+					dnf[i][j] = sb.toString();
+					}
+				if(arr1[i][j] == 0) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("\u00AC");
+					sb.append("X");
+					sb.append(j+1);
+					dnf[i][j] = sb.toString();
+					}
+				} 
+			}
+		
+		for(int i = 0; i < k; i++) {
+			for(int j = 0; j < 2*n+2; j++) {
+				dnf2[i][0] = "(";
+				dnf2[i][2*n] = ")";
+				dnf2[i][2*n+1] = "V";
+				int b = 0; 
+				for(int m = 1; m < 2*n; m++) {
+					if(m%2 == 1) {
+						dnf2[i][m] = dnf[i][b];
+						b++;
+					}else {
+						dnf2[i][m] = "^";
+					}
+				}
+				b = 0;
+			}
+		}
+		
+		dnf2[k-1][2*n+1] = "";
+		
+		return dnf2;	
+		}
+	
+	private static String[][] knfaufstellen(){
+		int e = zaehleneinsmenge();
+		int k = (int)Math.pow(2, n) - e;
+		int[][] arr1 = aufstellennullmenge();
+		String [][] knf = new String[k][n];
+		String [][] knf2 = new String[k][2*n+2];
+		
+		for(int i=0; i<k; i++) {
+			for(int j=0; j<n; j++) {
+				if(arr1[i][j] == 1) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("\u00AC");
+					sb.append("X");
+					sb.append(j+1);
+					knf[i][j] = sb.toString();
+					}
+				if(arr1[i][j] == 0) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("X");
+					sb.append(j+1);
+					knf[i][j] = sb.toString();
+					}
+				} 
+			}
+		
+		for(int i = 0; i < k; i++) {
+			for(int j = 0; j < 2*n+2; j++) {
+				knf2[i][0] = "(";
+				knf2[i][2*n] = ")";
+				knf2[i][2*n+1] = "^";
+				int b = 0; 
+				for(int m = 1; m < 2*n; m++) {
+					if(m%2 == 1) {
+						knf2[i][m] = knf[i][b];
+						b++;
+					}else {
+						knf2[i][m] = "V";
+					}
+				}
+				b = 0;
+			}
+		}
+		
+		knf2[k-1][2*n+1] = "";
+		
+		return knf2;	
+		}
+	
+	public static void main(String[] args) {
+		
+		int m = zaehleneinsmenge();
+		int e = (int)Math.pow(2, n) - m;
+		String [][] dnf = dnfaufstellen();
+		String [][] knf = knfaufstellen();
+		for(int i = 0; i<m; i++) {
+			for(int j=0; j<2*n+2;j++) {
+				System.out.print(dnf[i][j]);
+			}
+		}
+		
+		System.out.println();
+		
+		for(int i = 0; i<e; i++) {
+			for(int j=0; j<2*n+2;j++) {
+				System.out.print(knf[i][j]);
+			}
+		}
+		
+
+	}
+
+}
