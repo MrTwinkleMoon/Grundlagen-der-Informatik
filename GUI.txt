@@ -11,6 +11,7 @@ import javax.swing.text.MaskFormatter;
 
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.BitSet;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import java.awt.Font;
@@ -44,8 +45,8 @@ public class GUI {
 	private JLayeredPane layeredPane;
 	private int selectedBin;
 	private static int selectedBool;
-	private JTextField textFieldBCD1;
-	private JTextField textFieldBCD2;
+	private static JTextField textFieldBCD1;
+	private static JTextField textFieldBCD2;
 	private JTextField textFieldExc1;
 	private JTextField textFieldExc2;
 	public static JTable table;
@@ -56,6 +57,16 @@ public class GUI {
 	public static int getvar() {
 		int var = selectedBool+1;
 		return var;
+	}
+	
+	public static String getBCDx() {
+		String s = textFieldBCD1.getText();
+		return s;
+	}
+	
+	public static String getBCDy() {
+		String s = textFieldBCD2.getText();
+		return s;
 	}
 	
 	public static void main(String[] args) {
@@ -342,7 +353,8 @@ public class GUI {
 		JButton btnBCDAdd = new JButton("Addition");
 		btnBCDAdd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Hier könnte ihre Werbung stehen!");
+				BCD add = new BCD();
+				add.getBCDAdd();
 			}
 		});
 		btnBCDAdd.setFont(new Font("Arial", Font.PLAIN, 25));
@@ -352,7 +364,8 @@ public class GUI {
 		JButton btnBCDSub = new JButton("Subtraktion");
 		btnBCDSub.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Hier könnte ihre Werbung stehen!");
+				BCD sub = new BCD();
+				sub.getBCDSub();
 			}
 		});
 		btnBCDSub.setFont(new Font("Arial", Font.PLAIN, 25));
